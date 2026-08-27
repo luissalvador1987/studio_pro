@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_automation_flow_list" model="ir.ui.view">
+        <field name="name">studio.automation.flow.list</field>
+        <field name="model">studio.automation.flow</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="trigger"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-muted="state == 'disabled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_studio_automation_flow_form" model="ir.ui.view">
+        <field name="name">studio.automation.flow.form</field>
+        <field name="model">studio.automation.flow</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" type="object" string="Activar" class="btn-primary"
+                            invisible="state == 'active'"/>
+                    <button name="action_disable" type="object" string="Deshabilitar"
+                            invisible="state != 'active'"/>
+                    <button name="action_reset_draft" type="object" string="Volver a Borrador"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="ej: Notificar al gerente en prioridad alta"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="app_id"/>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="trigger"/>
+                            <field name="filter_domain"/>
+                        </group>
+                        <group invisible="trigger != 'on_time'">
+                            <field name="trg_date_id"/>
+                            <field name="trg_date_range"/>
+                            <field name="trg_date_range_type"/>
+                        </group>
+                        <group invisible="trigger != 'on_webhook'">
+                            <field name="webhook_url" widget="CopyClipboardURL"/>
+                        </group>
+                    </group>
+                    <field name="has_condition_step" invisible="1"/>
+                    <div class="alert alert-info" role="alert" invisible="not has_condition_step">
+                        Este flujo contiene un paso de Condición: se compila en una acción de servidor
+                        "Ejecutar Código Python" generada, que detiene la ejecución de los pasos
+                        restantes para un registro en cuanto una condición falla.
+                    </div>
+                    <notebook>
+                        <page string="Pasos">
+                            <field name="step_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="step_type"/>
+                                    <field name="domain" optional="show"/>
+                                    <field name="field_id" optional="show"/>
+                                    <field name="value_type" optional="hide"/>
+                                    <field name="value" optional="show"/>
+                                    <field name="create_model_id" optional="hide"/>
+                                    <field name="create_name" optional="hide"/>
+                                    <field name="link_field_id" optional="hide"/>
+                                    <field name="template_id" optional="hide"/>
+                                    <field name="webhook_url" optional="hide"/>
+                                    <field name="webhook_field_ids" widget="many2many_tags" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_automation_flow" model="ir.actions.act_window">
+        <field name="name">Automatizaciones</field>
+        <field name="res_model">studio.automation.flow</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea tu primer flujo de automatización</p>
+            <p>Encadena condiciones, actualizaciones de campos, creación de registros, correos y webhooks — en orden, con ramificación real.</p>
+        </field>
+    </record>
+</odoo>

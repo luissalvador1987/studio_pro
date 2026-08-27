@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_server_action_list" model="ir.ui.view">
+        <field name="name">studio.server.action.list</field>
+        <field name="model">studio.server.action</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="step_type"/>
+                <field name="expose_as_action" widget="boolean_toggle"/>
+                <field name="expose_as_cron" widget="boolean_toggle"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_studio_server_action_form" model="ir.ui.view">
+        <field name="name">studio.server.action.form</field>
+        <field name="model">studio.server.action</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" type="object" string="Activar" class="btn-primary"
+                            invisible="state == 'active'"/>
+                    <button name="action_deactivate" type="object" string="Desactivar"
+                            invisible="state != 'active'"/>
+                    <button name="action_run_now" type="object" string="Ejecutar ahora"
+                            invisible="state != 'active'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="ej: Marcar como urgente"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="app_id"/>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="step_type"/>
+                        </group>
+                        <group>
+                            <field name="expose_as_action"/>
+                            <field name="expose_as_cron"/>
+                            <group invisible="not expose_as_cron">
+                                <label for="cron_interval_number" string="Frecuencia"/>
+                                <div class="o_row">
+                                    <field name="cron_interval_number"/>
+                                    <field name="cron_interval_type"/>
+                                </div>
+                            </group>
+                        </group>
+                    </group>
+                    <group string="Actualizar un campo" invisible="step_type != 'update'">
+                        <field name="field_id"/>
+                        <field name="value_type"/>
+                        <field name="value"/>
+                    </group>
+                    <group string="Crear un registro relacionado" invisible="step_type != 'create'">
+                        <field name="create_model_id"/>
+                        <field name="create_name"/>
+                        <field name="link_field_id"/>
+                    </group>
+                    <group string="Enviar un correo" invisible="step_type != 'email'">
+                        <field name="template_id"/>
+                    </group>
+                    <group string="Webhook saliente" invisible="step_type != 'webhook'">
+                        <field name="webhook_url"/>
+                        <field name="webhook_field_ids" widget="many2many_tags"/>
+                    </group>
+                    <group string="Código Python" invisible="step_type != 'code'">
+                        <field name="code" nolabel="1" widget="code" options="{'mode': 'python'}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_server_action" model="ir.actions.act_window">
+        <field name="name">Funciones</field>
+        <field name="res_model">studio.server.action</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea tu primera función</p>
+            <p>Una función es una acción que se puede ejecutar sobre un modelo desde el menú de Acciones (⚙),
+               o de forma programada — a diferencia de una Automatización, que se dispara sola por un evento.</p>
+        </field>
+    </record>
+</odoo>

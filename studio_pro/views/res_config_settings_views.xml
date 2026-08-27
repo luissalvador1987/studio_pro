@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.studio.pro</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Studio Pro" string="Studio Pro" name="studio_pro">
+                    <block title="Asistente de IA" name="studio_pro_ai_setting_container">
+                        <setting id="studio_pro_ai_setting"
+                                 help="El Asistente de IA solo propone un plan para que lo revises — nunca crea nada automáticamente.">
+                            <field name="studio_ai_provider"/>
+                            <div class="content-group" invisible="studio_ai_provider == 'none'">
+                                <div class="mt8">
+                                    <label for="studio_ai_api_key" class="o_light_label"/>
+                                    <field name="studio_ai_api_key" password="True"/>
+                                </div>
+                                <div class="mt8">
+                                    <label for="studio_ai_model" class="o_light_label"/>
+                                    <field name="studio_ai_model"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

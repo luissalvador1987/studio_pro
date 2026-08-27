@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_change_list" model="ir.ui.view">
+        <field name="name">studio.change.list</field>
+        <field name="model">studio.change</field>
+        <field name="arch" type="xml">
+            <list default_order="id desc" create="0">
+                <field name="create_date"/>
+                <field name="summary"/>
+                <field name="studio_type"/>
+                <field name="action"/>
+                <field name="res_model"/>
+                <field name="user_id"/>
+                <field name="reverted"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_studio_change_form" model="ir.ui.view">
+        <field name="name">studio.change.form</field>
+        <field name="model">studio.change</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <header>
+                    <button name="action_revert" type="object" string="Revertir" class="btn-secondary"
+                            invisible="reverted or action != 'update'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="summary"/>
+                        <field name="studio_type"/>
+                        <field name="action"/>
+                        <field name="res_model"/>
+                        <field name="res_id"/>
+                        <field name="user_id"/>
+                        <field name="reverted"/>
+                    </group>
+                    <group string="Antes">
+                        <field name="vals_before" nolabel="1"/>
+                    </group>
+                    <group string="Después">
+                        <field name="vals_after" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_change" model="ir.actions.act_window">
+        <field name="name">Historial de cambios</field>
+        <field name="res_model">studio.change</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

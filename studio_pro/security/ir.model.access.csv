@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_studio_app,studio.app,model_studio_app,group_studio_manager,1,1,1,1
+access_studio_change,studio.change,model_studio_change,group_studio_manager,1,1,1,1
+access_studio_automation_flow,studio.automation.flow,model_studio_automation_flow,group_studio_manager,1,1,1,1
+access_studio_automation_step,studio.automation.step,model_studio_automation_step,group_studio_manager,1,1,1,1
+access_studio_report_builder,studio.report.builder,model_studio_report_builder,group_studio_manager,1,1,1,1
+access_studio_dashboard,studio.dashboard,model_studio_dashboard,group_studio_manager,1,1,1,1
+access_studio_new_model_wizard,studio.new.model.wizard,model_studio_new_model_wizard,group_studio_manager,1,1,1,1
+access_studio_new_field_wizard,studio.new.field.wizard,model_studio_new_field_wizard,group_studio_manager,1,1,1,1
+access_studio_view_editor_wizard,studio.view.editor.wizard,model_studio_view_editor_wizard,group_studio_manager,1,1,1,1
+access_studio_view_editor_line,studio.view.editor.line,model_studio_view_editor_line,group_studio_manager,1,1,1,1
+access_studio_export_wizard,studio.export.wizard,model_studio_export_wizard,group_studio_manager,1,1,1,1
+access_studio_ai_assistant_wizard,studio.ai.assistant.wizard,model_studio_ai_assistant_wizard,group_studio_manager,1,1,1,1
+access_studio_server_action,studio.server.action,model_studio_server_action,group_studio_manager,1,1,1,1
+access_studio_new_view_wizard,studio.new.view.wizard,model_studio_new_view_wizard,group_studio_manager,1,1,1,1

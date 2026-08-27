@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_app_kanban" model="ir.ui.view">
+        <field name="name">studio.app.kanban</field>
+        <field name="model">studio.app</field>
+        <field name="arch" type="xml">
+            <kanban class="o_studio_app_kanban">
+                <field name="name"/>
+                <field name="color"/>
+                <field name="state"/>
+                <field name="model_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click p-3">
+                            <div class="d-flex align-items-center">
+                                <field name="icon" widget="image" class="o_kanban_image rounded me-2"
+                                       options="{'img_class': 'object-fit-cover'}"
+                                       style="width:40px;height:40px;"/>
+                                <div>
+                                    <strong t-esc="record.name.value"/>
+                                    <div class="text-muted small">
+                                        <t t-esc="record.model_count.value"/> modelo(s) —
+                                        <span t-esc="record.state.value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_studio_app_list" model="ir.ui.view">
+        <field name="name">studio.app.list</field>
+        <field name="model">studio.app</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="technical_name"/>
+                <field name="state"/>
+                <field name="model_count"/>
+                <field name="automation_count"/>
+                <field name="report_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_studio_app_form" model="ir.ui.view">
+        <field name="name">studio.app.form</field>
+        <field name="model">studio.app</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" type="object" string="Activar" class="btn-primary"
+                            invisible="state == 'active'"/>
+                    <button name="action_new_model" type="object" string="Agregar un modelo" class="btn-secondary"/>
+                    <button name="%(action_studio_new_view_wizard)d" type="action" string="Agregar una vista"
+                            class="btn-secondary" context="{'default_app_id': id}"/>
+                    <button name="%(action_studio_export_wizard)d" type="action" string="Exportar como módulo"
+                            context="{'default_app_id': id}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="icon" widget="image" class="oe_avatar"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_models" type="object" class="oe_stat_button" icon="fa-cubes">
+                            <field name="model_count" widget="statinfo" string="Modelos"/>
+                        </button>
+                        <button name="action_open_automations" type="object" class="oe_stat_button" icon="fa-bolt">
+                            <field name="automation_count" widget="statinfo" string="Automatizaciones"/>
+                        </button>
+                        <button name="action_open_server_actions" type="object" class="oe_stat_button" icon="fa-cogs">
+                            <field name="server_action_count" widget="statinfo" string="Funciones"/>
+                        </button>
+                        <button name="action_open_reports" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="report_count" widget="statinfo" string="Reportes"/>
+                        </button>
+                        <button name="action_open_dashboards" type="object" class="oe_stat_button" icon="fa-bar-chart">
+                            <field name="dashboard_count" widget="statinfo" string="Tableros"/>
+                        </button>
+                        <button name="action_open_change_log" type="object" class="oe_stat_button" icon="fa-history">
+                            <field name="change_count" widget="statinfo" string="Historial de cambios"/>
+                        </button>
+                        <button name="action_open_access" type="object" class="oe_stat_button" icon="fa-lock">
+                            <div class="o_stat_info"><span class="o_stat_text">Permisos de acceso</span></div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Nombre de la App"/>
+                        <h1><field name="name" placeholder="ej: Servicio de Campo"/></h1>
+                        <field name="technical_name" readonly="1"/>
+                    </div>
+                    <group>
+                        <field name="description" placeholder="¿Para qué es esta app?"/>
+                        <field name="manager_group_id" readonly="1"/>
+                        <field name="user_group_id" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_app" model="ir.actions.act_window">
+        <field name="name">Apps de Studio Pro</field>
+        <field name="res_model">studio.app</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea tu primera App</p>
+            <p>Una App agrupa los Modelos, Automatizaciones, Reportes y Permisos de Acceso que construyes con Studio Pro.</p>
+        </field>
+    </record>
+</odoo>

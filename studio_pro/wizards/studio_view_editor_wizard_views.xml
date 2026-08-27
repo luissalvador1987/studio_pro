@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_view_editor_wizard_form" model="ir.ui.view">
+        <field name="name">studio.view.editor.wizard.form</field>
+        <field name="model">studio.view.editor.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="view_id" options="{'no_create': True}"/>
+                    <field name="model_name" readonly="1"/>
+                    <field name="view_type" readonly="1"/>
+                </group>
+                <div class="alert alert-info" role="alert">
+                    Arrastra las filas con el manejador para reordenar los campos, elige en qué grupo o
+                    pestaña va cada uno con "Ubicación", marca los atributos en línea, o elimina una fila
+                    para quitar ese campo de la vista.
+                </div>
+                <field name="line_ids">
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle"/>
+                        <field name="label"/>
+                        <field name="field_name"/>
+                        <field name="ttype"/>
+                        <field name="parent_xpath"/>
+                        <field name="required"/>
+                        <field name="readonly"/>
+                        <field name="invisible"/>
+                    </list>
+                </field>
+                <group string="Agregar un campo">
+                    <field name="add_field_id" domain="[('model', '=', model_name)]" options="{'no_create': True}"/>
+                    <button name="action_add_field" type="object" string="Agregar campo a la lista"/>
+                </group>
+                <group string="Estructura: grupos y pestañas" invisible="view_type != 'form'">
+                    <field name="new_group_title" placeholder="ej: Datos de facturación"/>
+                    <button name="action_add_group" type="object" string="Agregar Grupo Nuevo"/>
+                    <field name="new_page_title" placeholder="ej: Información adicional"/>
+                    <button name="action_add_page" type="object" string="Agregar Pestaña Nueva"/>
+                </group>
+                <footer>
+                    <button name="action_apply" type="object" string="Aplicar cambios" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_view_editor_wizard" model="ir.actions.act_window">
+        <field name="name">Editar diseño de la vista</field>
+        <field name="res_model">studio.view.editor.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

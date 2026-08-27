@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_studio_pro" model="ir.module.category">
+        <field name="name">Studio Pro</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <!-- Only trusted administrators (System / Technical Settings) may use the
+         builder: creating models/fields/automations is equivalent to writing
+         code and must stay restricted the same way Odoo Studio itself is. -->
+    <record id="group_studio_manager" model="res.groups">
+        <field name="name">Constructor de Studio Pro</field>
+        <field name="category_id" ref="module_category_studio_pro"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_system'))]"/>
+        <field name="comment">Puede crear y editar Apps, Modelos, Campos, Vistas, Automatizaciones, Reportes, Tableros, Permisos de Acceso y usar el Asistente de IA en Studio Pro — sobre modelos estándar, de cualquier addon instalado, o creados con Studio Pro. Las operaciones técnicas internas de Studio Pro se ejecutan con privilegios elevados (sudo) una vez pasado este control de grupo, igual que el propio Odoo Studio.</field>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_studio_manager'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_new_field_wizard_form" model="ir.ui.view">
+        <field name="name">studio.new.field.wizard.form</field>
+        <field name="model">studio.new.field.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="res_model_id" options="{'no_create': True}"/>
+                    <field name="res_model_name" invisible="1"/>
+                    <field name="field_description" placeholder="ej: Fecha de fin de garantía"/>
+                    <field name="technical_name_preview"/>
+                    <field name="ttype"/>
+                    <field name="required"/>
+                </group>
+                <group invisible="ttype not in ('many2one', 'many2many', 'one2many')">
+                    <field name="relation_model_id" options="{'no_create': True}"/>
+                    <field name="relation_field_id" invisible="ttype != 'one2many'" options="{'no_create': True}"/>
+                </group>
+                <group invisible="ttype != 'selection'">
+                    <field name="selection_options" placeholder="nuevo:Nuevo,en_curso:En Curso,hecho:Hecho"/>
+                </group>
+                <group>
+                    <field name="target_view_id" options="{'no_create': True}"/>
+                </group>
+                <footer>
+                    <button name="action_create_field" type="object" string="Crear campo" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_new_field_wizard" model="ir.actions.act_window">
+        <field name="name">Nuevo campo</field>
+        <field name="res_model">studio.new.field.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

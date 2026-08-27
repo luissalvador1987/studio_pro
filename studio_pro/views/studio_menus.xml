@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_studio_pro_config" model="ir.actions.act_window">
+        <field name="name">Ajustes</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'studio_pro'}</field>
+    </record>
+
+    <menuitem id="menu_studio_pro_root" name="Studio Pro" web_icon="studio_pro,static/description/icon.png"
+              groups="studio_pro.group_studio_manager" sequence="5"/>
+
+    <menuitem id="menu_studio_pro_apps" name="Apps" parent="menu_studio_pro_root"
+              action="action_studio_app" sequence="10"/>
+    <menuitem id="menu_studio_pro_new_field" name="Agregar un campo a cualquier modelo" parent="menu_studio_pro_root"
+              action="studio_pro.action_studio_new_field_wizard" sequence="20"/>
+    <menuitem id="menu_studio_pro_new_view" name="Agregar una vista a cualquier modelo" parent="menu_studio_pro_root"
+              action="studio_pro.action_studio_new_view_wizard" sequence="25"/>
+    <menuitem id="menu_studio_pro_automations" name="Automatizaciones" parent="menu_studio_pro_root"
+              action="action_studio_automation_flow" sequence="30"/>
+    <menuitem id="menu_studio_pro_server_actions" name="Funciones" parent="menu_studio_pro_root"
+              action="action_studio_server_action" sequence="35"/>
+    <menuitem id="menu_studio_pro_reports" name="Reportes" parent="menu_studio_pro_root"
+              action="action_studio_report_builder" sequence="40"/>
+    <menuitem id="menu_studio_pro_dashboards" name="Tableros" parent="menu_studio_pro_root"
+              action="action_studio_dashboard" sequence="45"/>
+    <menuitem id="menu_studio_pro_ai" name="Asistente de IA" parent="menu_studio_pro_root"
+              action="studio_pro.action_studio_ai_assistant_wizard" sequence="50"/>
+    <menuitem id="menu_studio_pro_change_log" name="Historial de cambios" parent="menu_studio_pro_root"
+              action="action_studio_change" sequence="60"/>
+
+    <!-- Direct access to Odoo's own technical screens so Studio Pro Builders
+         can edit *any* existing report, view or installed addon — not only
+         the ones created through the wizards above — without hunting for
+         Developer Mode. These reuse core Odoo actions as-is. -->
+    <menuitem id="menu_studio_pro_tools_root" name="Herramientas Avanzadas" parent="menu_studio_pro_root" sequence="65"/>
+    <menuitem id="menu_studio_pro_tools_reports" name="Todos los Reportes" parent="menu_studio_pro_tools_root"
+              action="base.ir_action_report" sequence="10"/>
+    <menuitem id="menu_studio_pro_tools_views" name="Todas las Vistas" parent="menu_studio_pro_tools_root"
+              action="base.action_ui_view" sequence="20"/>
+    <menuitem id="menu_studio_pro_tools_modules" name="Módulos / Addons Instalados" parent="menu_studio_pro_tools_root"
+              action="base.open_module_tree" sequence="30"/>
+
+    <menuitem id="menu_studio_pro_settings" name="Ajustes" parent="menu_studio_pro_root"
+              action="action_studio_pro_config" sequence="70"/>
+</odoo>
