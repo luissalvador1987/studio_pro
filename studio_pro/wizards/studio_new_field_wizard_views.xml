@@ -11,17 +11,29 @@
                     <field name="field_description" placeholder="ej: Fecha de fin de garantía"/>
                     <field name="technical_name_preview"/>
                     <field name="ttype"/>
-                    <field name="required"/>
+                    <field name="required" invisible="is_computed"/>
+                    <field name="index"/>
                 </group>
                 <group invisible="ttype not in ('many2one', 'many2many', 'one2many')">
                     <field name="relation_model_id" options="{'no_create': True}"/>
                     <field name="relation_field_id" invisible="ttype != 'one2many'" options="{'no_create': True}"/>
+                    <field name="on_delete" invisible="ttype != 'many2one'"/>
                 </group>
                 <group invisible="ttype != 'selection'">
                     <field name="selection_options" placeholder="nuevo:Nuevo,en_curso:En Curso,hecho:Hecho"/>
                 </group>
-                <group>
+                <group string="Campo calculado (Python)"
+                       invisible="ttype in ('many2many', 'one2many', 'binary')">
+                    <field name="is_computed"/>
+                    <field name="compute_code" widget="ace" options="{'mode': 'python'}"
+                           invisible="not is_computed"/>
+                    <field name="compute_depends" invisible="not is_computed"
+                           placeholder="ej: qty, price_unit, partner_id.name"/>
+                    <field name="store" invisible="not is_computed"/>
+                </group>
+                <group string="Dónde mostrarlo">
                     <field name="target_view_id" options="{'no_create': True}"/>
+                    <field name="restrict_group_ids" widget="many2many_tags" invisible="not target_view_id"/>
                 </group>
                 <footer>
                     <button name="action_create_field" type="object" string="Crear campo" class="btn-primary"/>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_custom_code_list" model="ir.ui.view">
+        <field name="name">studio.custom.code.list</field>
+        <field name="model">studio.custom.code</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code_type"/>
+                <field name="target_bundle"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_studio_custom_code_form" model="ir.ui.view">
+        <field name="name">studio.custom.code.form</field>
+        <field name="model">studio.custom.code</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code_type"/>
+                            <field name="target_bundle"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="attachment_url" readonly="1" invisible="not attachment_url"/>
+                        </group>
+                    </group>
+                    <group string="Código">
+                        <field name="code" nolabel="1" widget="ace" options="{'mode': 'javascript'}"
+                               invisible="code_type != 'js'"/>
+                        <field name="code" nolabel="1" widget="ace" options="{'mode': 'css'}"
+                               invisible="code_type != 'css'"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_custom_code" model="ir.actions.act_window">
+        <field name="name">Código JS/CSS Personalizado</field>
+        <field name="res_model">studio.custom.code</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Agrega JavaScript o CSS propio al panel de control o al sitio web, sin tocar
+                archivos ni reiniciar el servidor.
+            </p>
+        </field>
+    </record>
+</odoo>

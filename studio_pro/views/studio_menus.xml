@@ -30,6 +30,24 @@
     <menuitem id="menu_studio_pro_change_log" name="Historial de cambios" parent="menu_studio_pro_root"
               action="action_studio_change" sequence="60"/>
 
+    <!-- ORM profundo: restricciones de base de datos + herencia de vistas/reportes + código propio -->
+    <menuitem id="menu_studio_pro_advanced_root" name="Avanzado" parent="menu_studio_pro_root" sequence="55"/>
+    <menuitem id="menu_studio_pro_constraints" name="Restricciones (Constraints)" parent="menu_studio_pro_advanced_root"
+              action="action_studio_model_constraint" sequence="10"/>
+    <menuitem id="menu_studio_pro_view_inherit" name="Heredar una Vista o Reporte (xpath)" parent="menu_studio_pro_advanced_root"
+              action="studio_pro.action_studio_view_inherit_wizard" sequence="20"/>
+    <menuitem id="menu_studio_pro_custom_code" name="Código JS/CSS Personalizado" parent="menu_studio_pro_advanced_root"
+              action="action_studio_custom_code" sequence="30"/>
+
+    <!-- Control de acceso y seguridad -->
+    <menuitem id="menu_studio_pro_security_root" name="Seguridad" parent="menu_studio_pro_root" sequence="58"/>
+    <menuitem id="menu_studio_pro_new_rule" name="Nueva Regla de Registro" parent="menu_studio_pro_security_root"
+              action="studio_pro.action_studio_record_rule_wizard" sequence="10"/>
+    <menuitem id="menu_studio_pro_rules" name="Todas las Reglas de Registro" parent="menu_studio_pro_security_root"
+              action="base.action_rule" sequence="20"/>
+    <menuitem id="menu_studio_pro_access" name="Permisos de Acceso (ACL)" parent="menu_studio_pro_security_root"
+              action="base.ir_access_act" sequence="30"/>
+
     <!-- Direct access to Odoo's own technical screens so Studio Pro Builders
          can edit *any* existing report, view or installed addon — not only
          the ones created through the wizards above — without hunting for

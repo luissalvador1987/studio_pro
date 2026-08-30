@@ -332,15 +332,26 @@ class IrUiView(models.Model):
 
         return view
 
-    def studio_insert_field(self, name, parent_xpath=False, after_xpath=False):
+    def studio_insert_field(self, name, parent_xpath=False, after_xpath=False, groups=False):
         """Insert ``<field name="..."/>`` either right after ``after_xpath``
         (same parent), or as the last child of ``parent_xpath``, or — if
         neither is given — as the last field-holding node found (best
         effort), or finally as the last child of the view's <sheet>/root.
+
+        ``groups``: optional comma-separated external ids (e.g.
+        ``'base.group_system,sales_team.group_sale_manager'``). This is the
+        real Odoo mechanism for field-level access: there is no ORM-level
+        "field security" independent of the view for runtime-created fields
+        (``ir.model.fields.groups`` is a known dead/unimplemented column in
+        Odoo itself) — restricting the ``<field>`` node in every view that
+        shows it, exactly like a hand-written module would with
+        ``groups="..."`` on the field, is the correct and only way.
         """
         self.ensure_one()
         tree = etree.fromstring(self.arch.encode('utf-8'))
         new_node = etree.Element('field', name=name)
+        if groups:
+            new_node.set('groups', groups)
 
         if after_xpath:
             ref = tree.getroottree().xpath(after_xpath)

@@ -13,3 +13,7 @@ access_studio_export_wizard,studio.export.wizard,model_studio_export_wizard,grou
 access_studio_ai_assistant_wizard,studio.ai.assistant.wizard,model_studio_ai_assistant_wizard,group_studio_manager,1,1,1,1
 access_studio_server_action,studio.server.action,model_studio_server_action,group_studio_manager,1,1,1,1
 access_studio_new_view_wizard,studio.new.view.wizard,model_studio_new_view_wizard,group_studio_manager,1,1,1,1
+access_studio_model_constraint,studio.model.constraint,model_studio_model_constraint,group_studio_manager,1,1,1,1
+access_studio_custom_code,studio.custom.code,model_studio_custom_code,group_studio_manager,1,1,1,1
+access_studio_view_inherit_wizard,studio.view.inherit.wizard,model_studio_view_inherit_wizard,group_studio_manager,1,1,1,1
+access_studio_record_rule_wizard,studio.record.rule.wizard,model_studio_record_rule_wizard,group_studio_manager,1,1,1,1

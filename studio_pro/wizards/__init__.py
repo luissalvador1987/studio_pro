@@ -2,5 +2,7 @@ from . import studio_new_model_wizard
 from . import studio_new_field_wizard
 from . import studio_view_editor_wizard
 from . import studio_new_view_wizard
+from . import studio_view_inherit_wizard
+from . import studio_record_rule_wizard
 from . import studio_export_wizard
 from . import studio_ai_assistant
