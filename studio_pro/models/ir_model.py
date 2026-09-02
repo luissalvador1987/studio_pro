@@ -343,7 +343,7 @@ class IrUiView(models.Model):
 
         view = self.sudo().create({
             'name': name or ('%s (Studio Pro %s)' % (model_name, view_type)),
-            'type': 'tree' if view_type == 'list' else view_type,
+            'type': view_type,
             'model': model_name,
             'arch': arch,
         })
@@ -356,6 +356,46 @@ class IrUiView(models.Model):
                 action.view_mode = ','.join(modes)
 
         return view
+
+    @api.model
+    def studio_pro_quick_edit_action(self, model_name, view_type=False):
+        """Entry point for the Studio Pro systray icon ("Editar con Studio
+        Pro"): given whatever the user is currently looking at (any model,
+        any view type, on any installed app), open the right Studio Pro
+        wizard for it — the guided view editor if a primary view of that
+        type already exists, or the New View wizard (pre-filled) if not.
+        This is what makes Studio Pro reachable from every app, the same
+        way Odoo Studio's own pencil icon works, without a separate
+        per-model action to configure.
+        """
+        if not self.env.user.has_group('studio_pro.group_studio_manager'):
+            raise UserError(self.env._("No tenés permiso para usar Studio Pro."))
+        model = self.env['ir.model'].sudo().search([('model', '=', model_name)], limit=1)
+        if not model:
+            raise UserError(self.env._("Modelo '%s' no encontrado.") % model_name)
+
+        view_type = view_type or 'form'
+        view_id = self.sudo().default_view(model_name, view_type)
+        if not view_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': self.env._("Studio Pro — Nueva vista"),
+                'res_model': 'studio.new.view.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {
+                    'default_res_model_id': model.id,
+                    'default_view_type': view_type,
+                },
+            }
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Studio Pro — Editar vista"),
+            'res_model': 'studio.view.editor.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_view_id': view_id},
+        }
 
     def studio_insert_field(self, name, parent_xpath=False, after_xpath=False, groups=False):
         """Insert ``<field name="..."/>`` either right after ``after_xpath``

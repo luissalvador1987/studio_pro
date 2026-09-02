@@ -3,9 +3,19 @@
 
     <t t-name="studio_pro.SystrayItem">
         <div class="o_studio_pro_systray_item d-flex align-items-center" t-if="state.allowed">
-            <button class="btn position-relative" title="Studio Pro" t-on-click="onClick">
-                <i class="fa fa-magic"/>
-            </button>
+            <Dropdown>
+                <button class="btn position-relative" title="Studio Pro">
+                    <i class="fa fa-magic"/>
+                </button>
+                <t t-set-slot="content">
+                    <DropdownItem onSelected.bind="onEditCurrentView">
+                        Editar esta vista con Studio Pro
+                    </DropdownItem>
+                    <DropdownItem onSelected.bind="onOpenApp">
+                        Abrir Studio Pro
+                    </DropdownItem>
+                </t>
+            </Dropdown>
         </div>
     </t>
 

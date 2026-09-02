@@ -9,6 +9,13 @@ adicionales.
 
 Lo más destacado:
 
+* **Ícono de Studio Pro en la barra superior, en cualquier App instalada**:
+  un clic abre el editor guiado de Studio Pro para lo que estés mirando en
+  ese momento (modelo y tipo de vista actuales, resueltos igual que lo hace
+  el propio Odoo: ``ir.ui.view.default_view``) — si esa vista todavía no
+  existe para el modelo, abre el asistente de Nueva Vista ya precompletado
+  en vez de fallar. Así no hace falta entrar primero a la App de Studio Pro
+  para editar la pantalla que ya tenés abierta, en ninguna App del sistema.
 * Editor de vistas con grupos y pestañas de verdad (no solo una lista plana
   de campos): crea nuevos grupos/pestañas y decide en qué grupo va cada
   campo. Y crea vistas nuevas —formulario, lista, kanban, búsqueda,
@@ -129,7 +136,7 @@ Honestidad técnica:
   necesitás, la Acción de Servidor nativa de Odoo ya soporta 'Enviar SMS'
   una vez que el módulo sms está instalado.
     """,
-    'version': '18.0.3.0.0',
+    'version': '18.0.4.0.0',
     'category': 'Customizations',
     'author': "Designweblp",
     'maintainer': "Designweblp",
