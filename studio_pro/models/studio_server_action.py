@@ -29,6 +29,8 @@ class StudioServerAction(models.Model):
         ('update', "Actualizar un campo del registro"),
         ('create', "Crear un registro relacionado"),
         ('email', "Enviar un correo"),
+        ('activity', "Crear una actividad (recordatorio)"),
+        ('followers', "Agregar seguidores"),
         ('webhook', "Llamar a un webhook saliente"),
         ('code', "Código Python (avanzado)"),
     ], string="Qué hace", required=True, default='update')
@@ -49,6 +51,19 @@ class StudioServerAction(models.Model):
 
     template_id = fields.Many2one('mail.template', string="Plantilla de correo",
                                    domain="[('model_id', '=', model_id)]")
+
+    activity_type_id = fields.Many2one(
+        'mail.activity.type', string="Tipo de actividad",
+        domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]")
+    activity_summary = fields.Char(string="Título de la actividad")
+    activity_note = fields.Text(string="Nota")
+    activity_date_deadline_range = fields.Integer(string="Vence en", default=0)
+    activity_date_deadline_range_type = fields.Selection(
+        [('days', "Días"), ('weeks', "Semanas"), ('months', "Meses")],
+        string="Unidad de vencimiento", default='days')
+    activity_user_id = fields.Many2one('res.users', string="Responsable")
+
+    follower_partner_ids = fields.Many2many('res.partner', string="Agregar como seguidores")
 
     webhook_url = fields.Char(string="URL del webhook")
     webhook_field_ids = fields.Many2many('ir.model.fields', string="Campos a enviar",
@@ -178,6 +193,28 @@ class StudioServerAction(models.Model):
             if not self.template_id:
                 raise UserError(self.env._("Elige una plantilla de correo."))
             return dict(base_vals, state='mail_post', template_id=self.template_id.id, mail_post_method='email')
+
+        if self.step_type == 'activity':
+            if not self.model_id.is_mail_activity:
+                raise UserError(self.env._(
+                    "Este modelo todavía no tiene 'Actividades' habilitadas — activalas primero "
+                    "(asistente 'Chatter y Actividades') antes de crear una Función de Actividad."))
+            if not self.activity_type_id:
+                raise UserError(self.env._("Elige un tipo de actividad."))
+            return dict(base_vals, state='next_activity', activity_type_id=self.activity_type_id.id,
+                        activity_summary=self.activity_summary or '', activity_note=self.activity_note or '',
+                        activity_date_deadline_range=max(self.activity_date_deadline_range, 0),
+                        activity_date_deadline_range_type=self.activity_date_deadline_range_type,
+                        activity_user_type='specific', activity_user_id=self.activity_user_id.id or False)
+
+        if self.step_type == 'followers':
+            if not self.model_id.is_mail_thread:
+                raise UserError(self.env._(
+                    "Este modelo todavía no tiene el Chatter habilitado — activalo primero (asistente "
+                    "'Chatter y Actividades') antes de crear una Función de Seguidores."))
+            if not self.follower_partner_ids:
+                raise UserError(self.env._("Elige al menos un contacto para agregar como seguidor."))
+            return dict(base_vals, state='followers', partner_ids=[(6, 0, self.follower_partner_ids.ids)])
 
         if self.step_type == 'webhook':
             if not self.webhook_url:

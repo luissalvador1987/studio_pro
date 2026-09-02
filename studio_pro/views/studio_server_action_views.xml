@@ -37,6 +37,7 @@
                         <group>
                             <field name="app_id"/>
                             <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model_name" invisible="1"/>
                             <field name="step_type"/>
                         </group>
                         <group>
@@ -63,6 +64,17 @@
                     </group>
                     <group string="Enviar un correo" invisible="step_type != 'email'">
                         <field name="template_id"/>
+                    </group>
+                    <group string="Crear una actividad" invisible="step_type != 'activity'">
+                        <field name="activity_type_id"/>
+                        <field name="activity_summary"/>
+                        <field name="activity_note"/>
+                        <field name="activity_date_deadline_range"/>
+                        <field name="activity_date_deadline_range_type"/>
+                        <field name="activity_user_id"/>
+                    </group>
+                    <group string="Agregar seguidores" invisible="step_type != 'followers'">
+                        <field name="follower_partner_ids" widget="many2many_tags"/>
                     </group>
                     <group string="Webhook saliente" invisible="step_type != 'webhook'">
                         <field name="webhook_url"/>

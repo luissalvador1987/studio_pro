@@ -58,6 +58,7 @@
                             <field name="step_ids">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
+                                    <field name="model_name" column_invisible="1"/>
                                     <field name="step_type"/>
                                     <field name="domain" optional="show"/>
                                     <field name="field_id" optional="show"/>
@@ -67,6 +68,13 @@
                                     <field name="create_name" optional="hide"/>
                                     <field name="link_field_id" optional="hide"/>
                                     <field name="template_id" optional="hide"/>
+                                    <field name="activity_type_id" optional="hide"/>
+                                    <field name="activity_summary" optional="hide"/>
+                                    <field name="activity_note" optional="hide"/>
+                                    <field name="activity_date_deadline_range" optional="hide"/>
+                                    <field name="activity_date_deadline_range_type" optional="hide"/>
+                                    <field name="activity_user_id" optional="hide"/>
+                                    <field name="follower_partner_ids" widget="many2many_tags" optional="hide"/>
                                     <field name="webhook_url" optional="hide"/>
                                     <field name="webhook_field_ids" widget="many2many_tags" optional="hide"/>
                                 </list>

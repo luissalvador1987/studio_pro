@@ -12,6 +12,8 @@
                     <field name="technical_name_preview"/>
                     <field name="ttype"/>
                     <field name="required" invisible="is_computed"/>
+                    <field name="readonly" invisible="is_computed"/>
+                    <field name="tracking"/>
                     <field name="index"/>
                     <field name="translate" invisible="ttype not in ('char', 'text', 'html')"/>
                 </group>
@@ -22,6 +24,9 @@
                 </group>
                 <group invisible="ttype != 'selection'">
                     <field name="selection_options" placeholder="nuevo:Nuevo,en_curso:En Curso,hecho:Hecho"/>
+                </group>
+                <group invisible="is_computed or ttype in ('many2many', 'one2many', 'binary')">
+                    <field name="default_value" placeholder="ej: true / 42 / nuevo"/>
                 </group>
                 <group string="Campo calculado (Python)"
                        invisible="ttype in ('many2many', 'one2many', 'binary')">

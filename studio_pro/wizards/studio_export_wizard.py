@@ -293,6 +293,10 @@ class StudioExportWizard(models.TransientModel):
         ]
         if field.required:
             lines.append('    <field name="required" eval="True"/>')
+        if field.readonly and not field.compute:
+            lines.append('    <field name="readonly" eval="True"/>')
+        if field.tracking:
+            lines.append('    <field name="tracking">%d</field>' % field.tracking)
         if field.index:
             lines.append('    <field name="index" eval="True"/>')
         if field.relation:
@@ -317,6 +321,15 @@ class StudioExportWizard(models.TransientModel):
             lines.append('    <field name="value">%s</field>' % esc(selection.value))
             lines.append('    <field name="name">%s</field>' % esc(selection.name))
             lines.append('    <field name="sequence">%s</field>' % selection.sequence)
+            lines.append('  </record>')
+
+        default = self.env['ir.default'].sudo().search(
+            [('field_id', '=', field.id), ('user_id', '=', False), ('company_id', '=', False)], limit=1)
+        if default:
+            default_xmlid = self._xmlid_for(default, 'default_%s_%s' % (field.model.replace('.', '_'), field.name))
+            lines.append('  <record id="%s" model="ir.default">' % default_xmlid.split('.', 1)[1])
+            lines.append('    <field name="field_id" ref="%s"/>' % xmlid)
+            lines.append('    <field name="json_value">%s</field>' % esc(default.json_value))
             lines.append('  </record>')
         return "\n".join(lines)
 

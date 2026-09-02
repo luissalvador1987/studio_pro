@@ -9,33 +9,38 @@
     </record>
 
     <menuitem id="menu_studio_pro_root" name="Studio Pro" web_icon="studio_pro,static/description/icon.png"
-              groups="studio_pro.group_studio_manager" sequence="5"/>
+              groups="studio_pro.group_studio_manager,studio_pro.group_studio_user" sequence="5"/>
 
+    <!-- Apps, Tableros e Historial de cambios: sin 'groups' propio a propósito,
+         para que cualquiera que pueda ver la raíz (Constructor o Solo lectura)
+         los vea — el control real de qué puede hacer cada uno lo da el ACL de
+         cada modelo (perm_create/write/unlink en 0 para Solo lectura). -->
     <menuitem id="menu_studio_pro_apps" name="Apps" parent="menu_studio_pro_root"
               action="action_studio_app" sequence="10"/>
     <menuitem id="menu_studio_pro_new_field" name="Agregar un campo a cualquier modelo" parent="menu_studio_pro_root"
-              action="studio_pro.action_studio_new_field_wizard" sequence="20"/>
+              action="studio_pro.action_studio_new_field_wizard" groups="studio_pro.group_studio_manager" sequence="20"/>
     <menuitem id="menu_studio_pro_new_view" name="Agregar una vista a cualquier modelo" parent="menu_studio_pro_root"
-              action="studio_pro.action_studio_new_view_wizard" sequence="25"/>
+              action="studio_pro.action_studio_new_view_wizard" groups="studio_pro.group_studio_manager" sequence="25"/>
     <menuitem id="menu_studio_pro_mail_features" name="Chatter y Actividades" parent="menu_studio_pro_root"
-              action="studio_pro.action_studio_mail_features_wizard" sequence="27"/>
+              action="studio_pro.action_studio_mail_features_wizard" groups="studio_pro.group_studio_manager" sequence="27"/>
     <menuitem id="menu_studio_pro_search_customizer" name="Personalizar Búsqueda" parent="menu_studio_pro_root"
-              action="studio_pro.action_studio_search_customizer_wizard" sequence="28"/>
+              action="studio_pro.action_studio_search_customizer_wizard" groups="studio_pro.group_studio_manager" sequence="28"/>
     <menuitem id="menu_studio_pro_automations" name="Automatizaciones" parent="menu_studio_pro_root"
-              action="action_studio_automation_flow" sequence="30"/>
+              action="action_studio_automation_flow" groups="studio_pro.group_studio_manager" sequence="30"/>
     <menuitem id="menu_studio_pro_server_actions" name="Funciones" parent="menu_studio_pro_root"
-              action="action_studio_server_action" sequence="35"/>
+              action="action_studio_server_action" groups="studio_pro.group_studio_manager" sequence="35"/>
     <menuitem id="menu_studio_pro_reports" name="Reportes" parent="menu_studio_pro_root"
-              action="action_studio_report_builder" sequence="40"/>
+              action="action_studio_report_builder" groups="studio_pro.group_studio_manager" sequence="40"/>
     <menuitem id="menu_studio_pro_dashboards" name="Tableros" parent="menu_studio_pro_root"
               action="action_studio_dashboard" sequence="45"/>
     <menuitem id="menu_studio_pro_ai" name="Asistente de IA" parent="menu_studio_pro_root"
-              action="studio_pro.action_studio_ai_assistant_wizard" sequence="50"/>
+              action="studio_pro.action_studio_ai_assistant_wizard" groups="studio_pro.group_studio_manager" sequence="50"/>
     <menuitem id="menu_studio_pro_change_log" name="Historial de cambios" parent="menu_studio_pro_root"
               action="action_studio_change" sequence="60"/>
 
     <!-- ORM profundo: restricciones de base de datos + herencia de vistas/reportes + código propio -->
-    <menuitem id="menu_studio_pro_advanced_root" name="Avanzado" parent="menu_studio_pro_root" sequence="55"/>
+    <menuitem id="menu_studio_pro_advanced_root" name="Avanzado" parent="menu_studio_pro_root"
+              groups="studio_pro.group_studio_manager" sequence="55"/>
     <menuitem id="menu_studio_pro_constraints" name="Restricciones (Constraints)" parent="menu_studio_pro_advanced_root"
               action="action_studio_model_constraint" sequence="10"/>
     <menuitem id="menu_studio_pro_view_inherit" name="Heredar una Vista o Reporte (xpath)" parent="menu_studio_pro_advanced_root"
@@ -44,7 +49,8 @@
               action="action_studio_custom_code" sequence="30"/>
 
     <!-- Control de acceso y seguridad -->
-    <menuitem id="menu_studio_pro_security_root" name="Seguridad" parent="menu_studio_pro_root" sequence="58"/>
+    <menuitem id="menu_studio_pro_security_root" name="Seguridad" parent="menu_studio_pro_root"
+              groups="studio_pro.group_studio_manager" sequence="58"/>
     <menuitem id="menu_studio_pro_new_rule" name="Nueva Regla de Registro" parent="menu_studio_pro_security_root"
               action="studio_pro.action_studio_record_rule_wizard" sequence="10"/>
     <menuitem id="menu_studio_pro_rules" name="Todas las Reglas de Registro" parent="menu_studio_pro_security_root"
@@ -56,7 +62,8 @@
          can edit *any* existing report, view or installed addon — not only
          the ones created through the wizards above — without hunting for
          Developer Mode. These reuse core Odoo actions as-is. -->
-    <menuitem id="menu_studio_pro_tools_root" name="Herramientas Avanzadas" parent="menu_studio_pro_root" sequence="65"/>
+    <menuitem id="menu_studio_pro_tools_root" name="Herramientas Avanzadas" parent="menu_studio_pro_root"
+              groups="studio_pro.group_studio_manager" sequence="65"/>
     <menuitem id="menu_studio_pro_tools_reports" name="Todos los Reportes" parent="menu_studio_pro_tools_root"
               action="base.ir_action_report" sequence="10"/>
     <menuitem id="menu_studio_pro_tools_views" name="Todas las Vistas" parent="menu_studio_pro_tools_root"
@@ -65,5 +72,5 @@
               action="base.open_module_tree" sequence="30"/>
 
     <menuitem id="menu_studio_pro_settings" name="Ajustes" parent="menu_studio_pro_root"
-              action="action_studio_pro_config" sequence="70"/>
+              action="action_studio_pro_config" groups="studio_pro.group_studio_manager" sequence="70"/>
 </odoo>

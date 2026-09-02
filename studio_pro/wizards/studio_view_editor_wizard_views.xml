@@ -39,6 +39,8 @@
                 </group>
                 <footer>
                     <button name="action_apply" type="object" string="Aplicar cambios" class="btn-primary"/>
+                    <button name="action_preview" type="object" string="Vista previa"
+                            help="Abre la vista tal como está guardada ahora mismo — antes de aplicar los cambios pendientes en este formulario."/>
                     <button string="Cancelar" special="cancel" class="btn-secondary"/>
                 </footer>
             </form>

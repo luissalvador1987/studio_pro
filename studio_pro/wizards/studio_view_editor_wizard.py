@@ -72,6 +72,22 @@ class StudioViewEditorWizard(models.TransientModel):
         self.new_page_title = False
         return True
 
+    def action_preview(self):
+        """Open the view being edited exactly as it stands right now (before
+        applying any pending change in this wizard) so a Builder can check
+        the current layout without leaving the editor. For a form view with
+        no specific source record this opens as a new, unsaved record — the
+        wizard has no record context of its own to preview against."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Vista previa: %s") % (self.view_id.name or self.model_name),
+            'res_model': self.model_name,
+            'views': [(self.view_id.id, self.view_id.type)],
+            'view_mode': self.view_id.type,
+            'target': 'current',
+        }
+
     def action_apply(self):
         self.ensure_one()
         lines = [{

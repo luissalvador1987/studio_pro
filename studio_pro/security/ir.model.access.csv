@@ -21,3 +21,6 @@ access_studio_mail_features_wizard,studio.mail.features.wizard,model_studio_mail
 access_studio_search_customizer_wizard,studio.search.customizer.wizard,model_studio_search_customizer_wizard,group_studio_manager,1,1,1,1
 access_studio_search_filter_line,studio.search.filter.line,model_studio_search_filter_line,group_studio_manager,1,1,1,1
 access_studio_search_groupby_line,studio.search.groupby.line,model_studio_search_groupby_line,group_studio_manager,1,1,1,1
+access_studio_app_user,studio.app,model_studio_app,group_studio_user,1,0,0,0
+access_studio_change_user,studio.change,model_studio_change,group_studio_user,1,0,0,0
+access_studio_dashboard_user,studio.dashboard,model_studio_dashboard,group_studio_user,1,0,0,0

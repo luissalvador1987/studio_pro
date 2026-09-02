@@ -24,6 +24,20 @@ Lo más destacado:
   del propio módulo mail), sin escribir una clase Python.
 * **Campos traducibles**: marcá cualquier campo de texto para que se pueda
   escribir distinto en cada idioma instalado.
+* **Más control por campo**: solo lectura, registrar cambios en el Chatter
+  (``tracking``, mecanismo nativo del propio módulo mail) y un valor por
+  defecto para registros nuevos (mecanismo nativo ``ir.default`` — el mismo
+  que usa el propio Odoo Studio), todo desde el asistente de Nuevo Campo.
+* **Actividades y Seguidores desde Automatizaciones y Funciones**: además de
+  actualizar un campo, crear un registro, enviar un correo o llamar a un
+  webhook, un paso puede crear una Actividad (recordatorio con fecha límite
+  y responsable) o agregar Seguidores a un registro — mecanismo 100% nativo
+  de ``ir.actions.server`` (del propio módulo mail), sobre modelos con
+  Chatter/Actividades habilitadas.
+* **Dos niveles de acceso**: "Constructor de Studio Pro" (crea y edita todo)
+  y "Studio Pro — Solo lectura" (ve Apps, Tableros e Historial de cambios,
+  sin poder tocar la estructura de la base de datos) — para dar visibilidad
+  a un gerente o auditor sin darle permisos de builder.
 * **Campos calculados de verdad**: consola de código Python integrada
   (mismo motor sandboxeado que las Funciones) con su propio "Depende de"
   —el equivalente exacto a ``@api.depends``— para que el campo se
@@ -96,6 +110,13 @@ Honestidad técnica:
   algunas referencias (destinos fijos de un paso "Actualizar campo", o
   plantillas de correo externas a la App) son específicas de esta base de
   datos y pueden necesitar ajustarse a mano.
+* El editor de vistas de Studio Pro es **guiado por asistentes** (elegís el
+  grupo/pestaña/posición desde un formulario), no un lienzo de arrastrar y
+  soltar en vivo sobre la vista real: es un enfoque distinto, no una versión
+  reducida — cada cambio queda en un registro auditable con reversión desde
+  el Historial de cambios, algo que un editor puramente visual no te da
+  gratis. Si preferís ver el resultado antes de confirmar, el asistente de
+  Edición de Vista tiene un botón para previsualizar la vista actual.
 * **Qué NO incluye, a propósito**: la vista Gantt no está entre los tipos
   de vista ofrecidos — su motor de renderizado (``web_gantt``) es
   exclusivo de Odoo Enterprise y no existe en Community, así que crear una
@@ -108,7 +129,7 @@ Honestidad técnica:
   necesitás, la Acción de Servidor nativa de Odoo ya soporta 'Enviar SMS'
   una vez que el módulo sms está instalado.
     """,
-    'version': '18.0.2.0.0',
+    'version': '18.0.3.0.0',
     'category': 'Customizations',
     'author': "Designweblp",
     'maintainer': "Designweblp",

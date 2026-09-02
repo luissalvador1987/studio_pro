@@ -47,6 +47,19 @@ class StudioNewFieldWizard(models.TransientModel):
     technical_name_preview = fields.Char(compute='_compute_technical_name_preview', string="Nombre técnico")
     ttype = fields.Selection(FIELD_TYPES, required=True, default='char', string="Tipo")
     required = fields.Boolean(string="Obligatorio")
+    readonly = fields.Boolean(
+        string="Solo lectura", help="El usuario no puede editarlo a mano — útil para un valor que solo "
+                                     "cambia por Automatización/Función. Los campos calculados son "
+                                     "siempre de solo lectura, con o sin esta casilla.")
+    tracking = fields.Boolean(
+        string="Registrar cambios en el Chatter",
+        help="Cada cambio a este campo queda anotado como mensaje en el Chatter del registro — solo "
+             "tiene efecto si el modelo tiene el Chatter activado (asistente 'Chatter y Actividades').")
+    default_value = fields.Char(
+        string="Valor por defecto",
+        help="Valor inicial al crear un registro nuevo. Sí/No: 'true' o 'false'. Many2one/Selección: "
+             "el ID numérico o el valor técnico de la opción. No aplica a campos calculados, Archivo, "
+             "Many2many ni One2many.")
     translate = fields.Boolean(
         string="Traducible", help="El valor se puede escribir distinto en cada idioma instalado "
                                     "(Traducciones Manager de Odoo Studio) — solo para texto.")
@@ -110,6 +123,36 @@ class StudioNewFieldWizard(models.TransientModel):
             options.append((value.strip(), label.strip()))
         return options
 
+    def _parse_default_value(self, name):
+        """Convert the raw 'Valor por defecto' text into the Python value
+        ``ir.default`` expects for this field's type."""
+        raw = (self.default_value or '').strip()
+        if not raw:
+            return None
+        if self.ttype == 'boolean':
+            return raw.lower() in ('1', 'true', 'yes', 'si', 'sí')
+        if self.ttype == 'integer':
+            try:
+                return int(raw)
+            except ValueError:
+                raise UserError(self.env._("El valor por defecto de '%s' debe ser un número entero.") % name)
+        if self.ttype in ('float', 'monetary'):
+            try:
+                return float(raw)
+            except ValueError:
+                raise UserError(self.env._("El valor por defecto de '%s' debe ser un número.") % name)
+        if self.ttype == 'many2one':
+            if not raw.isdigit():
+                raise UserError(self.env._(
+                    "Para un campo many2one, el valor por defecto debe ser el ID numérico del "
+                    "registro destino."))
+            return int(raw)
+        if self.ttype == 'selection':
+            if raw not in {v for v, _l in self._parse_selection_options()}:
+                raise UserError(self.env._("'%s' no es una opción válida para el valor por defecto.") % raw)
+            return raw
+        return raw
+
     def action_create_field(self):
         self.ensure_one()
         if self.ttype in RELATIONAL_TYPES and not self.relation_model_id:
@@ -122,6 +165,9 @@ class StudioNewFieldWizard(models.TransientModel):
             raise UserError(
                 self.env._("Los campos calculados de Studio Pro no admiten Many2many/One2many todavía; "
                             "usa una Función (Acción de Servidor) para esa lógica."))
+        if (self.default_value or '').strip() and (
+                self.is_computed or self.ttype in ('many2many', 'one2many', 'binary')):
+            raise UserError(self.env._("Studio Pro no admite un valor por defecto para este tipo de campo."))
 
         name = slugify_technical(self.field_description, prefix='x_studio_')
         if self.env['ir.model.fields'].sudo().search_count(
@@ -134,6 +180,8 @@ class StudioNewFieldWizard(models.TransientModel):
             'field_description': self.field_description,
             'ttype': self.ttype,
             'required': self.required and not self.is_computed,
+            'readonly': self.readonly and not self.is_computed,
+            'tracking': 100 if self.tracking else 0,
             'index': self.index,
             'state': 'manual',
         }
@@ -158,6 +206,10 @@ class StudioNewFieldWizard(models.TransientModel):
             vals['readonly'] = True
 
         field = self.env['ir.model.fields'].sudo().create(vals)
+
+        default_val = self._parse_default_value(name)
+        if default_val is not None:
+            self.env['ir.default'].sudo().set(self.res_model_id.model, name, default_val)
 
         if self.target_view_id:
             groups = self._restrict_group_xmlids()
