@@ -13,7 +13,11 @@ class StudioNewViewWizard(models.TransientModel):
     view_type = fields.Selection([
         ('form', 'Formulario'), ('list', 'Lista'), ('kanban', 'Kanban'),
         ('search', 'Búsqueda'), ('calendar', 'Calendario'),
-    ], string="Tipo de vista", required=True, default='form')
+        ('pivot', 'Tabla dinámica'), ('graph', 'Gráfico'), ('activity', 'Actividades'),
+    ], string="Tipo de vista", required=True, default='form',
+        help="No incluye Gantt: ese motor de vista (web_gantt) es exclusivo de Odoo Enterprise "
+             "y no existe en Community, así que crear una vista de ese tipo acá no tendría con "
+             "qué dibujarse en el navegador.")
     name = fields.Char(string="Nombre de la vista")
 
     def action_create(self):

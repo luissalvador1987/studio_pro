@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_mail_features_wizard_form" model="ir.ui.view">
+        <field name="name">studio.mail.features.wizard.form</field>
+        <field name="model">studio.mail.features.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Chatter y Actividades">
+                <group>
+                    <field name="res_model_id" options="{'no_create': True}"/>
+                    <field name="has_chatter"/>
+                    <field name="has_activities" invisible="not has_chatter"/>
+                </group>
+                <footer>
+                    <button name="action_apply" type="object" string="Aplicar" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_mail_features_wizard" model="ir.actions.act_window">
+        <field name="name">Chatter y Actividades</field>
+        <field name="res_model">studio.mail.features.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

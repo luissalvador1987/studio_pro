@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_studio_search_customizer_wizard_form" model="ir.ui.view">
+        <field name="name">studio.search.customizer.wizard.form</field>
+        <field name="model">studio.search.customizer.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Personalizar Búsqueda">
+                <group>
+                    <field name="res_model_id" options="{'no_create': True}"/>
+                </group>
+                <notebook>
+                    <page string="Filtros">
+                        <field name="filter_line_ids">
+                            <list editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="label" placeholder="ej: Solo vencidas"/>
+                                <field name="field_id"/>
+                                <field name="operator"/>
+                                <field name="value" invisible="operator in ('is_true', 'is_false', 'is_set', 'is_not_set')"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Agrupar por">
+                        <field name="groupby_line_ids">
+                            <list editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="field_id"/>
+                                <field name="label" placeholder="(usa la etiqueta del campo si se deja vacío)"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_apply" type="object" string="Agregar a la búsqueda" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_studio_search_customizer_wizard" model="ir.actions.act_window">
+        <field name="name">Personalizar Búsqueda</field>
+        <field name="res_model">studio.search.customizer.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

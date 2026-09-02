@@ -285,9 +285,16 @@ class IrUiView(models.Model):
     @api.model
     def studio_create_view(self, model_name, view_type, name=False):
         """Creates a brand-new, minimal-but-valid view of ``view_type``
-        ('form', 'list', 'kanban', 'search' or 'calendar') for ``model_name``,
-        so Studio Pro can add views a model doesn't have yet — not just edit
-        ones that already exist."""
+        ('form', 'list', 'kanban', 'search', 'calendar', 'pivot', 'graph' or
+        'activity') for ``model_name``, so Studio Pro can add views a model
+        doesn't have yet — not just edit ones that already exist.
+
+        Nota de honestidad: NO se ofrece 'gantt'. El renderizador de la vista
+        Gantt (el módulo ``web_gantt``) es exclusivo de Odoo Enterprise — no
+        existe en Community. Crear un ``ir.ui.view`` de tipo 'gantt' acá no
+        rompería nada al guardar, pero al abrirlo el cliente no tendría con
+        qué dibujarlo; ofrecer ese botón sería fingir una función de
+        Enterprise que en los hechos no funcionaría, así que no está."""
         model = self.env['ir.model'].sudo().search([('model', '=', model_name)], limit=1)
         if not model:
             raise UserError(self.env._("Modelo '%s' no encontrado.") % model_name)
@@ -313,6 +320,24 @@ class IrUiView(models.Model):
                 raise UserError(self.env._(
                     "Este modelo no tiene un campo de fecha/hora — agrega uno antes de crear una vista calendario."))
             arch = '<calendar date_start="%s"><field name="%s"/></calendar>' % (date_field, name_field)
+        elif view_type == 'pivot':
+            # Sin filas/columnas fijas: Odoo arma un pivot usable (cantidad de registros) desde
+            # el vacío; el usuario elige medidas y agrupaciones desde la propia vista después.
+            arch = '<pivot/>'
+        elif view_type == 'graph':
+            groupby_field = next((
+                f.name for f in model.field_id
+                if f.ttype in ('many2one', 'selection') and f.name != name_field
+            ), False)
+            arch = ('<graph><field name="%s"/></graph>' % groupby_field) if groupby_field else '<graph/>'
+        elif view_type == 'activity':
+            if not model.is_mail_activity:
+                raise UserError(self.env._(
+                    "Este modelo todavía no tiene 'Actividades' habilitadas — activalas primero "
+                    "(botón 'Chatter y Actividades' en la App) antes de crear una vista Actividad."))
+            arch = '<activity string="%s"><field name="%s"/><templates><div t-name="activity-box">' \
+                   '<field name="%s" display="full"/></div></templates></activity>' % (
+                       model.name, name_field, name_field)
         else:
             raise UserError(self.env._("Tipo de vista no soportado: %s") % view_type)
 
@@ -374,5 +399,43 @@ class IrUiView(models.Model):
                 target = tree
             target.append(new_node)
 
+        self.write({'arch': etree.tostring(tree, encoding='unicode')})
+        return True
+
+    def studio_insert_filter(self, name, string, domain=False, context=False):
+        """Agrega un ``<filter>`` (para un filtro con dominio fijo, o para un
+        'Agrupar por' vía ``context``) directo bajo la raíz ``<search>`` —
+        la sintaxis nativa de Odoo también acepta filtros sueltos sin
+        envolverlos en un ``<group>``. No duplica si ya existe uno con el
+        mismo ``name``."""
+        self.ensure_one()
+        if self.type != 'search':
+            raise UserError(self.env._("Los filtros solo se pueden agregar a una vista de búsqueda."))
+        tree = etree.fromstring(self.arch.encode('utf-8'))
+        if tree.find(".//filter[@name='%s']" % name) is not None:
+            return False
+        node = etree.SubElement(tree, 'filter')
+        node.set('name', name)
+        node.set('string', string)
+        if domain:
+            node.set('domain', domain)
+        if context:
+            node.set('context', context)
+        self.write({'arch': etree.tostring(tree, encoding='unicode')})
+        return True
+
+    def studio_add_chatter(self):
+        """Agrega ``<chatter/>`` como último hijo del ``<form>`` raíz (al
+        mismo nivel que ``<sheet/>``, nunca dentro), la sintaxis moderna de
+        Odoo — usado al retrofitear Chatter/Actividades sobre un modelo de
+        Studio Pro que ya tenía vistas de formulario creadas antes de
+        activarlas."""
+        self.ensure_one()
+        if self.type != 'form':
+            raise UserError(self.env._("El chatter solo se puede agregar a una vista de formulario."))
+        tree = etree.fromstring(self.arch.encode('utf-8'))
+        if tree.find('.//chatter') is not None:
+            return False  # ya lo tiene, no duplicar
+        etree.SubElement(tree, 'chatter')
         self.write({'arch': etree.tostring(tree, encoding='unicode')})
         return True

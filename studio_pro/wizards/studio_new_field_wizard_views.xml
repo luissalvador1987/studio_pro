@@ -13,6 +13,7 @@
                     <field name="ttype"/>
                     <field name="required" invisible="is_computed"/>
                     <field name="index"/>
+                    <field name="translate" invisible="ttype not in ('char', 'text', 'html')"/>
                 </group>
                 <group invisible="ttype not in ('many2one', 'many2many', 'one2many')">
                     <field name="relation_model_id" options="{'no_create': True}"/>

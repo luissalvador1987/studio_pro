@@ -6,3 +6,5 @@ from . import studio_view_inherit_wizard
 from . import studio_record_rule_wizard
 from . import studio_export_wizard
 from . import studio_ai_assistant
+from . import studio_mail_features_wizard
+from . import studio_search_customizer_wizard

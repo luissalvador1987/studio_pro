@@ -11,8 +11,19 @@ Lo más destacado:
 
 * Editor de vistas con grupos y pestañas de verdad (no solo una lista plana
   de campos): crea nuevos grupos/pestañas y decide en qué grupo va cada
-  campo. Y crea vistas nuevas (formulario, lista, kanban, búsqueda,
-  calendario) para cualquier modelo, no solo edita las existentes.
+  campo. Y crea vistas nuevas —formulario, lista, kanban, búsqueda,
+  calendario, **tabla dinámica, gráfico y actividades**— para cualquier
+  modelo, no solo edita las existentes.
+* **Personalizar Búsqueda sin código**: agregá filtros con condición
+  ("Solo vencidas", "Monto > 1000") y opciones de "Agrupar por" a la
+  búsqueda de cualquier modelo desde un formulario guiado, sin tocar XML.
+* **Chatter y Actividades con un clic**: activá el historial de mensajes,
+  seguidores y actividades (recordatorios con fecha límite) sobre
+  cualquier modelo de Studio Pro —al crearlo o después— con el mecanismo
+  100% nativo de Odoo (``ir.model.is_mail_thread``/``is_mail_activity``,
+  del propio módulo mail), sin escribir una clase Python.
+* **Campos traducibles**: marcá cualquier campo de texto para que se pueda
+  escribir distinto en cada idioma instalado.
 * **Campos calculados de verdad**: consola de código Python integrada
   (mismo motor sandboxeado que las Funciones) con su propio "Depende de"
   —el equivalente exacto a ``@api.depends``— para que el campo se
@@ -85,8 +96,19 @@ Honestidad técnica:
   algunas referencias (destinos fijos de un paso "Actualizar campo", o
   plantillas de correo externas a la App) son específicas de esta base de
   datos y pueden necesitar ajustarse a mano.
+* **Qué NO incluye, a propósito**: la vista Gantt no está entre los tipos
+  de vista ofrecidos — su motor de renderizado (``web_gantt``) es
+  exclusivo de Odoo Enterprise y no existe en Community, así que crear una
+  vista de ese tipo acá no tendría con qué dibujarse en el navegador;
+  ofrecerla igual sería aparentar una función de Enterprise que en los
+  hechos no funciona. Tampoco se agregó "Enviar SMS" como paso de Función:
+  requiere el módulo ``sms`` instalado (con su propio proveedor
+  configurado) y depender de él a la fuerza en todas las instalaciones no
+  vale la pena por una opción que la mayoría no va a usar — si lo
+  necesitás, la Acción de Servidor nativa de Odoo ya soporta 'Enviar SMS'
+  una vez que el módulo sms está instalado.
     """,
-    'version': '18.0.1.0.0',
+    'version': '18.0.2.0.0',
     'category': 'Customizations',
     'author': "Designweblp",
     'maintainer': "Designweblp",
@@ -106,6 +128,8 @@ Honestidad técnica:
         'wizards/studio_new_view_wizard_views.xml',
         'wizards/studio_view_inherit_wizard_views.xml',
         'wizards/studio_record_rule_wizard_views.xml',
+        'wizards/studio_mail_features_wizard_views.xml',
+        'wizards/studio_search_customizer_wizard_views.xml',
         'wizards/studio_export_wizard_views.xml',
         'wizards/studio_ai_assistant_views.xml',
         'views/studio_app_views.xml',

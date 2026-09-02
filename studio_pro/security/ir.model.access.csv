@@ -17,3 +17,7 @@ access_studio_model_constraint,studio.model.constraint,model_studio_model_constr
 access_studio_custom_code,studio.custom.code,model_studio_custom_code,group_studio_manager,1,1,1,1
 access_studio_view_inherit_wizard,studio.view.inherit.wizard,model_studio_view_inherit_wizard,group_studio_manager,1,1,1,1
 access_studio_record_rule_wizard,studio.record.rule.wizard,model_studio_record_rule_wizard,group_studio_manager,1,1,1,1
+access_studio_mail_features_wizard,studio.mail.features.wizard,model_studio_mail_features_wizard,group_studio_manager,1,1,1,1
+access_studio_search_customizer_wizard,studio.search.customizer.wizard,model_studio_search_customizer_wizard,group_studio_manager,1,1,1,1
+access_studio_search_filter_line,studio.search.filter.line,model_studio_search_filter_line,group_studio_manager,1,1,1,1
+access_studio_search_groupby_line,studio.search.groupby.line,model_studio_search_groupby_line,group_studio_manager,1,1,1,1

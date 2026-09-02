@@ -47,6 +47,9 @@ class StudioNewFieldWizard(models.TransientModel):
     technical_name_preview = fields.Char(compute='_compute_technical_name_preview', string="Nombre técnico")
     ttype = fields.Selection(FIELD_TYPES, required=True, default='char', string="Tipo")
     required = fields.Boolean(string="Obligatorio")
+    translate = fields.Boolean(
+        string="Traducible", help="El valor se puede escribir distinto en cada idioma instalado "
+                                    "(Traducciones Manager de Odoo Studio) — solo para texto.")
     index = fields.Boolean(
         string="Indexado", help="Crea un índice de base de datos — acelera búsquedas/filtros por este campo.")
     relation_model_id = fields.Many2one('ir.model', string="Modelo relacionado",
@@ -140,6 +143,8 @@ class StudioNewFieldWizard(models.TransientModel):
             vals['relation_field'] = self.relation_field_id.name
         if self.ttype == 'many2one':
             vals['on_delete'] = self.on_delete
+        if self.ttype in ('char', 'text', 'html'):
+            vals['translate'] = self.translate
         if self.ttype == 'selection':
             options = self._parse_selection_options()
             if not options:

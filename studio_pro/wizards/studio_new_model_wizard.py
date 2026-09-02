@@ -15,6 +15,20 @@ class StudioNewModelWizard(models.TransientModel):
     has_active_field = fields.Boolean(default=True, string="Archivado (campo Activo)")
     has_sequence_field = fields.Boolean(default=False, string="Orden manual (campo Secuencia)")
     has_description_field = fields.Boolean(default=False, string="Descripción (campo de texto largo)")
+    has_chatter = fields.Boolean(
+        default=True, string="Chatter (mensajes y seguidores)",
+        help="Historial de mensajes, seguidores y el buzón de correo entrante de cada registro "
+             "(igual que en cualquier app de Odoo). Usa el mecanismo nativo is_mail_thread de "
+             "ir.model — no hace falta escribir una sola línea de Python.")
+    has_activities = fields.Boolean(
+        default=True, string="Actividades (recordatorios y siguiente acción)",
+        help="Programar 'Llamar', 'Enviar email', etc. con fecha límite y responsable, con el "
+             "reloj de actividades en la vista de lista/kanban. Requiere Chatter.")
+
+    @api.onchange('has_chatter')
+    def _onchange_has_chatter(self):
+        if not self.has_chatter:
+            self.has_activities = False
 
     @api.depends('name')
     def _compute_technical_name_preview(self):
@@ -51,6 +65,11 @@ class StudioNewModelWizard(models.TransientModel):
             'state': 'manual',
             'studio_app_id': self.app_id.id,
             'field_id': field_cmds,
+            # Mecanismo 100% nativo de Odoo (módulo mail): al quedar en True acá, el ORM agrega
+            # solo la mezcla mail.thread/mail.activity.mixin al instanciar el modelo — no hace
+            # falta escribir una clase Python ni un módulo real.
+            'is_mail_thread': self.has_chatter,
+            'is_mail_activity': self.has_chatter and self.has_activities,
         })
         # los campos manuales no admiten un `default=` a nivel Python; se usan
         # registros ir.default en su lugar, igual que la herramienta de
@@ -90,8 +109,9 @@ class StudioNewModelWizard(models.TransientModel):
             '%s'
             '</group>'
             '</sheet>'
+            '%s'
             '</form>'
-        ) % form_fields
+        ) % (form_fields, '<chatter/>' if self.has_chatter else '')
         self.env['ir.ui.view'].sudo().create({
             'name': '%s.form (Studio Pro)' % model.model, 'type': 'form', 'model': model.model, 'arch': form_arch,
         })

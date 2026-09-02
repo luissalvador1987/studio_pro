@@ -15,6 +15,10 @@
                     <field name="has_sequence_field"/>
                     <field name="has_description_field"/>
                 </group>
+                <group string="Comunicación">
+                    <field name="has_chatter"/>
+                    <field name="has_activities" invisible="not has_chatter"/>
+                </group>
                 <footer>
                     <button name="action_create" type="object" string="Crear modelo" class="btn-primary"/>
                     <button string="Cancelar" special="cancel" class="btn-secondary"/>

@@ -17,6 +17,10 @@
               action="studio_pro.action_studio_new_field_wizard" sequence="20"/>
     <menuitem id="menu_studio_pro_new_view" name="Agregar una vista a cualquier modelo" parent="menu_studio_pro_root"
               action="studio_pro.action_studio_new_view_wizard" sequence="25"/>
+    <menuitem id="menu_studio_pro_mail_features" name="Chatter y Actividades" parent="menu_studio_pro_root"
+              action="studio_pro.action_studio_mail_features_wizard" sequence="27"/>
+    <menuitem id="menu_studio_pro_search_customizer" name="Personalizar Búsqueda" parent="menu_studio_pro_root"
+              action="studio_pro.action_studio_search_customizer_wizard" sequence="28"/>
     <menuitem id="menu_studio_pro_automations" name="Automatizaciones" parent="menu_studio_pro_root"
               action="action_studio_automation_flow" sequence="30"/>
     <menuitem id="menu_studio_pro_server_actions" name="Funciones" parent="menu_studio_pro_root"

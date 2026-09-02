@@ -265,13 +265,20 @@ class StudioExportWizard(models.TransientModel):
     # ------------------------------------------------------------------
     def _export_model(self, model):
         xmlid = self._xmlid_for(model, 'model_%s' % model.model.replace('.', '_'))
-        return (
-            '  <record id="%s" model="ir.model">\n'
-            '    <field name="name">%s</field>\n'
-            '    <field name="model">%s</field>\n'
-            '    <field name="state">manual</field>\n'
-            '  </record>'
-        ) % (xmlid.split('.', 1)[1], esc(model.name), esc(model.model))
+        lines = [
+            '  <record id="%s" model="ir.model">' % xmlid.split('.', 1)[1],
+            '    <field name="name">%s</field>' % esc(model.name),
+            '    <field name="model">%s</field>' % esc(model.model),
+            '    <field name="state">manual</field>',
+        ]
+        # Chatter/Actividades: mecanismo 100% nativo (ir.model.is_mail_thread/is_mail_activity,
+        # del propio módulo mail) — no genera ninguna clase Python.
+        if model.is_mail_thread:
+            lines.append('    <field name="is_mail_thread" eval="True"/>')
+        if model.is_mail_activity:
+            lines.append('    <field name="is_mail_activity" eval="True"/>')
+        lines.append('  </record>')
+        return "\n".join(lines)
 
     def _export_field(self, field):
         xmlid = self._xmlid_for(field, 'field_%s_%s' % (field.model.replace('.', '_'), field.name))
@@ -294,6 +301,8 @@ class StudioExportWizard(models.TransientModel):
             lines.append('    <field name="relation_field">%s</field>' % esc(field.relation_field))
         if field.ttype == 'many2one' and field.on_delete:
             lines.append('    <field name="on_delete">%s</field>' % esc(field.on_delete))
+        if field.ttype in ('char', 'text', 'html') and field.translate:
+            lines.append('    <field name="translate" eval="True"/>')
         if field.compute:
             lines.append('    <field name="compute">%s</field>' % esc(field.compute))
             lines.append('    <field name="depends">%s</field>' % esc(field.depends or ''))
