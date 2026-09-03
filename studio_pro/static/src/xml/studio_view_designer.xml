@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="studio_pro.StudioViewDesigner">
+        <div class="o_action o_studio_view_designer h-100">
+            <Layout display="{ controlPanel: {} }">
+                <t t-set-slot="control-panel-create-button">
+                    <button type="button" class="btn btn-secondary me-2"
+                            t-on-click="() => this.addContainer('group')">
+                        <i class="fa fa-plus me-1"/>Grupo
+                    </button>
+                    <button type="button" class="btn btn-secondary me-2"
+                            t-on-click="() => this.addContainer('page')">
+                        <i class="fa fa-plus me-1"/>Pestaña
+                    </button>
+                    <span t-if="state.dirty" class="text-warning me-2">
+                        <i class="fa fa-circle small me-1"/>Cambios sin guardar
+                    </span>
+                    <button type="button" class="btn btn-primary" t-on-click="() => this.save()"
+                            t-att-disabled="state.saving">
+                        Guardar
+                    </button>
+                </t>
+
+                <div t-if="state.loading" class="p-4 text-center text-muted">Cargando…</div>
+                <div t-else="" class="o_studio_designer_body d-flex h-100">
+                    <div class="o_studio_designer_sidebar border-end p-2 overflow-auto">
+                        <h6 class="text-muted">Campos disponibles</h6>
+                        <div class="small text-muted mb-2">Arrastrá un campo hacia un grupo o pestaña.</div>
+                        <div t-foreach="state.availableFields" t-as="f" t-key="f.name"
+                             class="o_studio_field_chip o_studio_available_chip"
+                             draggable="true"
+                             t-on-dragstart="(ev) => this.onDragStartAvailable(ev, f)">
+                            <span t-esc="f.string"/>
+                            <span class="badge text-bg-light ms-1" t-esc="f.ttype"/>
+                        </div>
+                        <div t-if="!state.availableFields.length" class="text-muted small fst-italic">
+                            No quedan campos del modelo para agregar.
+                        </div>
+                    </div>
+
+                    <div class="o_studio_designer_canvas flex-grow-1 overflow-auto p-3">
+                        <div t-foreach="state.containers" t-as="c" t-key="c.xpath || 'root'"
+                             class="o_studio_container border rounded p-2 mb-3"
+                             t-on-dragover.prevent="() => {}"
+                             t-on-drop="(ev) => this.onDropOnContainer(ev, c.xpath)">
+                            <div class="o_studio_container_title fw-bold mb-2" t-esc="c.label"/>
+                            <div t-foreach="linesForContainer(c.xpath)" t-as="line" t-key="line.key"
+                                 class="o_studio_field_chip d-flex align-items-center"
+                                 t-attf-class="{{ state.dropIndicator.key === line.key ? 'o_studio_drop_' + state.dropIndicator.position : '' }}"
+                                 draggable="true"
+                                 t-on-dragstart="(ev) => this.onDragStartLine(ev, line)"
+                                 t-on-dragover="(ev) => this.onDragOverLine(ev, line)"
+                                 t-on-dragleave="() => this.onDragLeaveLine()"
+                                 t-on-drop="(ev) => this.onDropOnLine(ev, line, c.xpath)">
+                                <i class="fa fa-arrows me-2 text-muted" title="Arrastrar"/>
+                                <span class="flex-grow-1" t-esc="line.string"/>
+                                <span class="badge text-bg-light me-1" t-esc="line.ttype"/>
+                                <div class="form-check form-check-inline mb-0 me-1" title="Obligatorio">
+                                    <input type="checkbox" class="form-check-input"
+                                           t-att-checked="line.required"
+                                           t-on-change="() => this.toggleAttr(line, 'required')"/>
+                                    <label class="form-check-label small">Obl.</label>
+                                </div>
+                                <div class="form-check form-check-inline mb-0 me-1" title="Solo lectura">
+                                    <input type="checkbox" class="form-check-input"
+                                           t-att-checked="line.readonly"
+                                           t-on-change="() => this.toggleAttr(line, 'readonly')"/>
+                                    <label class="form-check-label small">Lect.</label>
+                                </div>
+                                <div class="form-check form-check-inline mb-0 me-2" title="Invisible">
+                                    <input type="checkbox" class="form-check-input"
+                                           t-att-checked="line.invisible"
+                                           t-on-change="() => this.toggleAttr(line, 'invisible')"/>
+                                    <label class="form-check-label small">Inv.</label>
+                                </div>
+                                <button class="btn btn-sm btn-link text-danger p-0"
+                                        t-on-click.stop="() => this.removeLine(line)" title="Quitar">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </div>
+                            <div t-if="!linesForContainer(c.xpath).length"
+                                 class="o_studio_drop_placeholder text-muted small fst-italic p-2 text-center border border-dashed rounded">
+                                Soltá un campo acá
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

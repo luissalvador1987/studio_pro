@@ -217,6 +217,47 @@ class IrUiView(models.Model):
         self.write({'arch': etree.tostring(tree, encoding='unicode')})
         return True
 
+    def studio_pro_get_designer_data(self):
+        """Everything the drag-and-drop visual designer needs for this view
+        in one call: the current field lines (same shape/order as
+        ``studio_get_field_lines``), the containers they can be dropped
+        into, and the model's remaining fields, ready to be dragged in from
+        the designer's toolbar."""
+        self.ensure_one()
+        if not self.env.user.has_group('studio_pro.group_studio_manager'):
+            raise UserError(self.env._("No tenés permiso para usar Studio Pro."))
+        lines = self.studio_get_field_lines()
+        used_names = {l['name'] for l in lines}
+        model = self.env['ir.model'].sudo().search([('model', '=', self.model)], limit=1)
+        available_fields = [{
+            'name': f.name, 'string': f.field_description or f.name, 'ttype': f.ttype,
+        } for f in model.field_id.sorted('field_description')
+            if f.name not in used_names and f.name not in _SKIP_FIELD_NAMES]
+        return {
+            'view_id': self.id,
+            'view_name': self.name,
+            'model': self.model,
+            'model_name': model.name,
+            'lines': lines,
+            'containers': self.studio_get_containers(),
+            'available_fields': available_fields,
+        }
+
+    def studio_pro_apply_designer_lines(self, lines):
+        """Save a full pass from the visual designer and log it, then return
+        the freshly re-read field lines so newly-created nodes (sent without
+        an xpath) come back with the real one — letting the designer keep
+        working on the same screen without a full reload."""
+        self.ensure_one()
+        if not self.env.user.has_group('studio_pro.group_studio_manager'):
+            raise UserError(self.env._("No tenés permiso para usar Studio Pro."))
+        self.studio_apply_field_lines(lines)
+        self.env['studio.change'].log(
+            'view', 'ir.ui.view', self.id, action='update',
+            summary="Diseño de la vista #%s (%s) editado con el diseñador visual (arrastrar y soltar)"
+                    % (self.id, self.model))
+        return self.studio_get_field_lines()
+
     def studio_get_containers(self):
         """Returns the list of places a field (or another container) can be
         placed into: the root/sheet itself, plus every existing <group> and
@@ -388,6 +429,8 @@ class IrUiView(models.Model):
                     'default_view_type': view_type,
                 },
             }
+        if view_type in ('form', 'list'):
+            return self.studio_pro_designer_action(view_id)
         return {
             'type': 'ir.actions.act_window',
             'name': self.env._("Studio Pro — Editar vista"),
@@ -395,6 +438,20 @@ class IrUiView(models.Model):
             'view_mode': 'form',
             'target': 'new',
             'context': {'default_view_id': view_id},
+        }
+
+    @api.model
+    def studio_pro_designer_action(self, view_id):
+        """The client action descriptor that opens the drag-and-drop visual
+        designer for ``view_id`` — shared by the systray icon and by the
+        classic (list-based) editor's own "Diseño visual" button, so both
+        entry points open the exact same screen."""
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'studio_pro_view_designer',
+            'name': self.env._("Studio Pro — Diseño visual"),
+            'target': 'current',
+            'params': {'view_id': view_id},
         }
 
     def studio_insert_field(self, name, parent_xpath=False, after_xpath=False, groups=False):

@@ -39,6 +39,9 @@
                 </group>
                 <footer>
                     <button name="action_apply" type="object" string="Aplicar cambios" class="btn-primary"/>
+                    <button name="action_open_designer" type="object" string="Diseño visual (arrastrar y soltar)"
+                            invisible="view_type not in ('form', 'list')"
+                            help="Abre el diseñador visual: arrastrá los campos para reordenarlos o moverlos de grupo/pestaña, y arrastrá campos nuevos desde la barra de herramientas."/>
                     <button name="action_preview" type="object" string="Vista previa"
                             help="Abre la vista tal como está guardada ahora mismo — antes de aplicar los cambios pendientes en este formulario."/>
                     <button string="Cancelar" special="cancel" class="btn-secondary"/>

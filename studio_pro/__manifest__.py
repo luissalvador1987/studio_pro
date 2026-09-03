@@ -117,13 +117,22 @@ Honestidad técnica:
   algunas referencias (destinos fijos de un paso "Actualizar campo", o
   plantillas de correo externas a la App) son específicas de esta base de
   datos y pueden necesitar ajustarse a mano.
-* El editor de vistas de Studio Pro es **guiado por asistentes** (elegís el
-  grupo/pestaña/posición desde un formulario), no un lienzo de arrastrar y
-  soltar en vivo sobre la vista real: es un enfoque distinto, no una versión
-  reducida — cada cambio queda en un registro auditable con reversión desde
-  el Historial de cambios, algo que un editor puramente visual no te da
-  gratis. Si preferís ver el resultado antes de confirmar, el asistente de
-  Edición de Vista tiene un botón para previsualizar la vista actual.
+* **Diseñador visual de arrastrar y soltar** para formularios y listas:
+  reordená campos arrastrándolos, movelos a otro grupo o pestaña soltándolos
+  ahí, y arrastrá campos nuevos del modelo desde la barra de herramientas de
+  la izquierda directamente a donde tienen que ir. "Nuevo Grupo"/"Nueva
+  Pestaña" quedan como botones (crean un contenedor, no un campo). Se abre
+  solo o desde el ícono de Studio Pro en cualquier App, o desde el editor de
+  vistas clásico (botón "Diseño visual"). Guarda a través del mismo motor
+  del editor guiado (``ir.ui.view.studio_apply_field_lines``) — sin un
+  segundo camino de persistencia en paralelo — así que todo cambio sigue
+  quedando en un registro auditable con reversión desde el Historial de
+  cambios, algo que un editor puramente visual normalmente no te da gratis.
+  El editor guiado con lista editable (sin arrastrar, más accesible por
+  teclado) sigue disponible como alternativa, y también sirve para
+  kanban/calendario/tabla dinámica/gráfico/búsqueda/actividades, tipos de
+  vista sin una estructura real de grupos/pestañas donde arrastrar no
+  aplica.
 * **Qué NO incluye, a propósito**: la vista Gantt no está entre los tipos
   de vista ofrecidos — su motor de renderizado (``web_gantt``) es
   exclusivo de Odoo Enterprise y no existe en Community, así que crear una
@@ -134,9 +143,12 @@ Honestidad técnica:
   configurado) y depender de él a la fuerza en todas las instalaciones no
   vale la pena por una opción que la mayoría no va a usar — si lo
   necesitás, la Acción de Servidor nativa de Odoo ya soporta 'Enviar SMS'
-  una vez que el módulo sms está instalado.
+  una vez que el módulo sms está instalado. El diseñador visual, por ahora,
+  solo arrastra ``<field/>`` — no botones, etiquetas ni separadores; agregar
+  esos elementos todavía se hace editando el arch directamente (Herramientas
+  Avanzadas > Todas las Vistas) o por herencia xpath.
     """,
-    'version': '18.0.4.0.0',
+    'version': '18.0.5.0.0',
     'category': 'Customizations',
     'author': "Designweblp",
     'maintainer': "Designweblp",

@@ -88,6 +88,13 @@ class StudioViewEditorWizard(models.TransientModel):
             'target': 'current',
         }
 
+    def action_open_designer(self):
+        """Switch from this list-based editor to the drag-and-drop visual
+        designer for the same view — only meaningful for form/list, the two
+        view types with a real group/page layout to drag things around in."""
+        self.ensure_one()
+        return self.env['ir.ui.view'].studio_pro_designer_action(self.view_id.id)
+
     def action_apply(self):
         self.ensure_one()
         lines = [{

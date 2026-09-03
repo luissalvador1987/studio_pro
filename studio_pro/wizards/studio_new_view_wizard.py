@@ -28,13 +28,7 @@ class StudioNewViewWizard(models.TransientModel):
             summary="Vista '%s' (%s) creada para %s" % (view.name, self.view_type, self.res_model_id.model))
 
         if self.view_type in ('form', 'list'):
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'studio.view.editor.wizard',
-                'view_mode': 'form',
-                'target': 'new',
-                'context': {'default_view_id': view.id},
-            }
+            return self.env['ir.ui.view'].studio_pro_designer_action(view.id)
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'ir.ui.view',

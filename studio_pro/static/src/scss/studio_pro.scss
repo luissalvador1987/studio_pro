@@ -1,3 +1,46 @@
 .o_studio_pro_systray_item .btn {
     padding: 0 8px;
 }
+
+.o_studio_view_designer {
+    .o_studio_designer_sidebar {
+        width: 260px;
+        min-width: 260px;
+        background: var(--Panel-header-bg, #f8f9fa);
+    }
+
+    .o_studio_field_chip {
+        border: 1px solid var(--border-color, #dee2e6);
+        border-radius: 4px;
+        padding: 4px 8px;
+        margin-bottom: 6px;
+        background: var(--body-bg, #fff);
+        cursor: grab;
+        user-select: none;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    .o_studio_available_chip {
+        display: block;
+    }
+
+    .o_studio_container {
+        background: var(--body-bg, #fff);
+        min-height: 48px;
+    }
+
+    .o_studio_drop_before {
+        border-top: 2px solid var(--primary, #714B67);
+    }
+
+    .o_studio_drop_after {
+        border-bottom: 2px solid var(--primary, #714B67);
+    }
+
+    .o_studio_drop_placeholder {
+        border-style: dashed !important;
+    }
+}
